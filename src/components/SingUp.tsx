@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+// import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -13,9 +13,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { AppDispatch, RootState } from '../app/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../userData/userSlice';
+import { Link } from 'react-router-dom';
+import { alpha, FormControl, FormHelperText, InputBase, InputLabel, styled } from '@mui/material';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
+
 
 interface InputFiled {
     firstName: string;
@@ -25,12 +31,28 @@ interface InputFiled {
 }
 
 const SignUp: React.FC = () => {
-    const { register, handleSubmit, formState: { errors }, trigger, setValue, clearErrors } = useForm<InputFiled>()
+    const dispatch: AppDispatch = useDispatch()
+    const users = useSelector((state: RootState) => state.user)
+    console.log("users", users);
+
+    const { register,
+        handleSubmit,
+        formState: { errors },
+        trigger,
+        setValue,
+        clearErrors,
+        reset,
+        getValues
+    } = useForm<InputFiled>()
 
     //Function to onSubmit value Store
     const onformsubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
         console.log("data", data);
+        dispatch(setUser(data))
+        reset()
+        console.log("you have to succefull ");
+
     }
 
     // Function to handle onChange and clear error if valid
@@ -41,7 +63,13 @@ const SignUp: React.FC = () => {
             clearErrors(field); // Clear the error if the validation passes
         }
     };
+    // Save data to local storage when form values change
+    const onFormChange = () => {
+        // const formValues = getValues();
+        console.log("users", users);
 
+        localStorage.setItem('formData', JSON.stringify(users));
+    };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -53,6 +81,10 @@ const SignUp: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Add box shadow here
+                        padding: 3, // Optional: Add padding for better appearance
+                        borderRadius: 2, // Optional: Add border radius for rounded corners
+                        backgroundColor: '#fff', // Optional: Ensure background color is set
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -61,7 +93,7 @@ const SignUp: React.FC = () => {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit(onformsubmit)}>
+                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit(onformsubmit)} onChange={onFormChange}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -78,8 +110,8 @@ const SignUp: React.FC = () => {
                                     error={!!errors.firstName}
                                     helperText={errors.firstName?.message}
                                     onChange={(e) => handleOnChange("firstName", e.target.value)}
-
                                 />
+
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -162,14 +194,15 @@ const SignUp: React.FC = () => {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="signin" variant="body2">
-                                    Already have an account? Sign in
+                                <Link to="/signin">
+                                    <Typography variant="body2">
+                                        Already have an account? Sign in
+                                    </Typography>
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
-                {/* <Copyright sx={{ mt: 5 }} /> */}
             </Container>
         </ThemeProvider>
     );
