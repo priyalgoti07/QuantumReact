@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -23,16 +23,23 @@ interface InputFiled {
 }
 
 const SignIn: React.FC = () => {
-    const { register, handleSubmit, formState: { errors }, trigger } = useForm<InputFiled>()
+    const { register, handleSubmit, formState: { errors }, trigger, setValue, clearErrors } = useForm<InputFiled>()
 
+    //Function to onSubmit value Store
     const onformsubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
+        event?.preventDefault();
         console.log("data", data);
     }
 
-     // Function to manually trigger validation on input change
-     const handleOnChange = async (field: keyof InputFiled) => {
-        await trigger(field); // Trigger validation for the specific field
+    // Function to handle onChange and clear error if valid
+    const handleOnChange = async (field: keyof InputFiled, value: string) => {
+        setValue(field, value); // Update the value in the form state
+        const result = await trigger(field); // Trigger validation for the specific field
+        if (result) {
+            clearErrors(field); // Clear the error if the validation passessignup
+        }
     };
+
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -71,6 +78,7 @@ const SignIn: React.FC = () => {
                             })}
                             error={!!errors.email}
                             helperText={errors.email?.message}
+                            onChange={(e) => handleOnChange("email", e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -96,7 +104,7 @@ const SignIn: React.FC = () => {
                             })}
                             error={!!errors.password}
                             helperText={errors.password?.message}
-                            onChange={() => handleOnChange("email")}
+                            onChange={(e) => handleOnChange("password", e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -117,7 +125,7 @@ const SignIn: React.FC = () => {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
