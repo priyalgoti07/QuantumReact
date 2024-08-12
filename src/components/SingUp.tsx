@@ -17,7 +17,8 @@ import { setUser } from '../userData/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, FilledInput, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Snackbar } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../utils/hooks';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility } from '@mui/icons-material';
+import EyeClose from '../assets/svg/customSvg/EyeClose';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -86,10 +87,10 @@ const SignUp: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Add box shadow here
-                        padding: 3, // Optional: Add padding for better appearance
-                        borderRadius: 2, // Optional: Add border radius for rounded corners
-                        backgroundColor: '#fff', // Optional: Ensure background color is set
+                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                        padding: 3,
+                        borderRadius: 2,
+                        backgroundColor: '#fff',
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -190,7 +191,7 @@ const SignUp: React.FC = () => {
                                                     onMouseDown={(e) => e.preventDefault()}
                                                     edge="end"
                                                 >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    {showPassword ? <EyeClose /> : <Visibility />}
                                                 </IconButton>
                                             </InputAdornment>
                                         }

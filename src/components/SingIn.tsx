@@ -17,7 +17,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, FilledInput, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Snackbar } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility } from '@mui/icons-material';
+import EyeClose from '../assets/svg/customSvg/EyeClose';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -62,15 +63,18 @@ const SignIn: React.FC = () => {
                 reset()
                 setTimeout(() => {
                     navigate('/dashboard')
-                }, 1000);
+                }, 3000);
             }
 
         }
         else {
-            setSnackbarMessage("Login failed.  sign up.")
+
+            setSnackbarMessage("you are not sign up. Please first sign up")
             setSnackbarSeverity('error')
             setOpenSnackbar(true)
-
+            // setTimeout(() => {
+            //     navigate('/signup')
+            // }, 1000);
         }
 
     }
@@ -86,12 +90,6 @@ const SignIn: React.FC = () => {
         if (result) {
             clearErrors(field); // Clear the error if the validation passessignup
         }
-    };
-
-    const handleMouseDownPassword = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        event.preventDefault();
     };
 
     return (
@@ -175,7 +173,7 @@ const SignIn: React.FC = () => {
                                                     onMouseDown={(e) => e.preventDefault()}
                                                     edge="end"
                                                 >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    {showPassword ? <EyeClose /> : <Visibility />}
                                                 </IconButton>
                                             </InputAdornment>
                                         }
@@ -204,7 +202,9 @@ const SignIn: React.FC = () => {
                             <Grid item xs>
                                 <Link to="#">
                                     <Typography variant="body2">
-                                        Forgot password?
+                                        <Link to='/forgetpassword'>
+                                            Forgot password?
+                                        </Link>
                                     </Typography>
                                 </Link>
                             </Grid>
