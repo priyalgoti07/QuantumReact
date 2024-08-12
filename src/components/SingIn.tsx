@@ -15,8 +15,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { Link } from 'react-router-dom';
-import { Alert, Snackbar } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert, FilledInput, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Snackbar } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -27,9 +28,11 @@ interface InputFiled {
 }
 
 const SignIn: React.FC = () => {
+    const navigate = useNavigate()
     const UserAllData = useSelector((state: RootState) => state.user)
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState<string>('');
+    const [showPassword, setShowPassword] = React.useState<boolean>(false);
     const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
 
 
@@ -46,16 +49,28 @@ const SignIn: React.FC = () => {
         event?.preventDefault();
         const registeredUser = UserAllData.users.find((item) => item.email === data.email)
 
-        if (registeredUser && registeredUser?.password === data.password) {
-            setSnackbarMessage("Login successfull")
-            setSnackbarSeverity("success")
-            setOpenSnackbar(true)
-            reset()
+        if (registeredUser) {
+            if (registeredUser?.password !== data.password) {
+                setSnackbarMessage("Please check your credentials")
+                setSnackbarSeverity("error")
+                setOpenSnackbar(true)
+            }
+            else {
+                setSnackbarMessage("Login successfull")
+                setSnackbarSeverity("success")
+                setOpenSnackbar(true)
+                reset()
+                setTimeout(() => {
+                    navigate('/dashboard')
+                }, 1000);
+            }
+
         }
         else {
-            setSnackbarMessage("Login failed. Please check your credentials or sign up.")
+            setSnackbarMessage("Login failed.  sign up.")
             setSnackbarSeverity('error')
             setOpenSnackbar(true)
+
         }
 
     }
@@ -71,6 +86,12 @@ const SignIn: React.FC = () => {
         if (result) {
             clearErrors(field); // Clear the error if the validation passessignup
         }
+    };
+
+    const handleMouseDownPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
     };
 
     return (
@@ -120,32 +141,49 @@ const SignIn: React.FC = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    {...register("password", {
-                                        required: "Password is requrired",
-                                        minLength: {
-                                            value: 8,
-                                            message: "Password must be at least 8 characters long"
-                                        },
-                                        pattern: {
-                                            value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/,
-                                            message: "Password must include at least one uppercase letter, one lowercase letter, and one number"
+                                <FormControl fullWidth variant="filled" error={!!errors.password}>
+                                    <InputLabel htmlFor="filled-adornment-password">
+                                        Password
+                                    </InputLabel>
+                                    <FilledInput
+                                        required
+                                        fullWidth
+                                        id="password"
+                                        autoComplete="current-password"
+                                        // variant="filled"
+                                        {...register("password", {
+                                            required: "Password is requrired",
+                                            minLength: {
+                                                value: 8,
+                                                message: "Password must be at least 8 characters long"
+                                            },
+                                            pattern: {
+                                                value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/,
+                                                message: "Password must include at least one uppercase letter, one lowercase letter, and one number"
 
+                                            }
+
+                                        })}
+                                        error={!!errors.password}
+                                        onChange={(e) => handleOnChange("password", e.target.value)}
+                                        type={showPassword ? "text" : "password"}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
                                         }
-
-                                    })}
-                                    error={!!errors.password}
-                                    helperText={errors.password?.message}
-                                    onChange={(e) => handleOnChange("password", e.target.value)}
-                                />
+                                    />
+                                    {errors.password && (
+                                        <FormHelperText>{errors.password.message}</FormHelperText>
+                                    )}
+                                </FormControl>
                             </Grid>
 
                         </Grid>
@@ -185,9 +223,6 @@ const SignIn: React.FC = () => {
                     autoHideDuration={6000}
                     onClose={handleSnackbarClose}
                 >
-                    {/* <Alert onClose={handleSnackbarClose} severity="error">
-                        {snackbarMessage}
-                    </Alert> */}
                     <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
                         {snackbarMessage}
                     </Alert>

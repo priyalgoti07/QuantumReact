@@ -1,14 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
 interface User {
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
 }
 // Define a type for the slice state
-interface UserState {
+export interface UserState {
     users: User[];  // Change to an object if you're managing a single user, or use an array for multiple users
 }
 
@@ -20,8 +21,13 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<User>) => {
-            state.users.push(action.payload)
+        setUser: (state, action: PayloadAction<Omit<User, 'id'>>) => {
+            const newUser = {
+                ...action.payload,
+                id: nanoid()
+            }
+            state.users.push(newUser)
+            // localStorage.setItem("users", JSON.stringify(state.users))
         }
     }
 })

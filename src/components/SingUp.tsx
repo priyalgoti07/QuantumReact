@@ -13,11 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AppDispatch, RootState } from '../app/store';
-import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../userData/userSlice';
-import { Link } from 'react-router-dom';
-import { alpha, FormControl, FormHelperText, InputBase, InputLabel, styled } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert, FilledInput, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Snackbar } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../utils/hooks';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -31,9 +31,14 @@ interface InputFiled {
 }
 
 const SignUp: React.FC = () => {
-    const dispatch: AppDispatch = useDispatch()
-    const users = useSelector((state: RootState) => state.user)
-    console.log("users", users);
+    const navigate = useNavigate(); // Initialize useNavigate for redirection
+    const dispatch = useAppDispatch()
+    const users = useAppSelector((state) => state.user)
+    console.log("usersusersusersusers------->", users)
+    const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState<string>('');
+    const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
+    const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     const { register,
         handleSubmit,
@@ -42,18 +47,25 @@ const SignUp: React.FC = () => {
         setValue,
         clearErrors,
         reset,
-        getValues
     } = useForm<InputFiled>()
 
     //Function to onSubmit value Store
     const onformsubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
-        console.log("data", data);
         dispatch(setUser(data))
+        setSnackbarMessage("sign-up successfull")
+        setSnackbarSeverity("success")
+        setOpenSnackbar(true)
         reset()
-        console.log("you have to succefull ");
-
+        setTimeout(() => {
+            navigate('/signin')
+        }, 1000);
     }
+
+    //Close Error Message
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+    };
 
     // Function to handle onChange and clear error if valid
     const handleOnChange = async (field: keyof InputFiled, value: string) => {
@@ -62,13 +74,6 @@ const SignUp: React.FC = () => {
         if (result) {
             clearErrors(field); // Clear the error if the validation passes
         }
-    };
-    // Save data to local storage when form values change
-    const onFormChange = () => {
-        // const formValues = getValues();
-        console.log("users", users);
-
-        localStorage.setItem('formData', JSON.stringify(users));
     };
 
     return (
@@ -93,7 +98,7 @@ const SignUp: React.FC = () => {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit(onformsubmit)} onChange={onFormChange}>
+                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit(onformsubmit)}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -129,6 +134,8 @@ const SignUp: React.FC = () => {
                                     onChange={(e) => handleOnChange("lastName", e.target.value)}
                                 />
                             </Grid>
+
+
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -150,32 +157,48 @@ const SignUp: React.FC = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    variant="filled"
-                                    {...register("password", {
-                                        required: "Password is requrired",
-                                        minLength: {
-                                            value: 8,
-                                            message: "Password must be at least 8 characters long"
-                                        },
-                                        pattern: {
-                                            value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/,
-                                            message: "Password must include at least one uppercase letter, one lowercase letter, and one number"
+                                <FormControl fullWidth variant="filled" error={!!errors.password}>
+                                    <InputLabel htmlFor="filled-adornment-password">
+                                        Password
+                                    </InputLabel>
+                                    <FilledInput
+                                        required
+                                        fullWidth
+                                        id="password"
+                                        autoComplete="current-password"
+                                        {...register("password", {
+                                            required: "Password is requrired",
+                                            minLength: {
+                                                value: 8,
+                                                message: "Password must be at least 8 characters long"
+                                            },
+                                            pattern: {
+                                                value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/,
+                                                message: "Password must include at least one uppercase letter, one lowercase letter, and one number"
 
+                                            }
+
+                                        })}
+                                        error={!!errors.password}
+                                        onChange={(e) => handleOnChange("password", e.target.value)}
+                                        type={showPassword ? "text" : "password"}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
                                         }
-
-                                    })}
-                                    error={!!errors.password}
-                                    helperText={errors.password?.message}
-                                    onChange={(e) => handleOnChange("password", e.target.value)}
-                                />
+                                    />
+                                    {errors.password && (
+                                        <FormHelperText>{errors.password.message}</FormHelperText>
+                                    )}
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
@@ -203,6 +226,16 @@ const SignUp: React.FC = () => {
                         </Grid>
                     </Box>
                 </Box>
+                <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                >
+                    <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+                        {snackbarMessage}
+                    </Alert>
+
+                </Snackbar>
             </Container>
         </ThemeProvider>
     );

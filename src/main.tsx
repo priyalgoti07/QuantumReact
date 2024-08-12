@@ -5,19 +5,24 @@ import Layout from "../src/Layout.tsx"
 import SignIn from './components/SingIn.tsx'
 import SignUp from './components/SingUp.tsx'
 import { Provider } from 'react-redux'
-import { store } from './app/store.ts'
+import { persistor, store } from './app/store.ts'
 import Header from './components/Header.tsx'
+import Dashboard from './components/Dashboard.tsx'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Layout />} >
 
     <Route path='/home' element={<Header />} />
+    <Route path='/dashboard' element={<Dashboard/>}/>
     <Route path='/signin' element={<SignIn />} />
     <Route path='/signup' element={<SignUp />} />
   </Route>
 ))
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <PersistGate persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
   </Provider>,
 )
