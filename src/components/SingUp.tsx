@@ -79,7 +79,7 @@ const SignUp: React.FC = () => {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <Box
                     sx={{
@@ -87,10 +87,10 @@ const SignUp: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-                        padding: 3,
-                        borderRadius: 2,
-                        backgroundColor: '#fff',
+                        // boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                        // padding: 3,
+                        // borderRadius: 2,
+                        // backgroundColor: '#fff',
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

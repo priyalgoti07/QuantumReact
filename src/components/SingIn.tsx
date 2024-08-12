@@ -21,7 +21,50 @@ import { Visibility } from '@mui/icons-material';
 import EyeClose from '../assets/svg/customSvg/EyeClose';
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '8px', // Custom button border radius
+                    backgroundColor: "#1C252E",
+                    '&:hover': {
+                        backgroundColor: "#454F5B", // Button color on hover
+                    },
+                },
+            },
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#fafafa', // Custom text field background color
+
+                },
+            },
+        },
+        MuiFilledInput: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#e0e0e0', // Custom filled input background color
+                },
+            },
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    color: 'grey', // Default label color
+                    '&.Mui-focused': {
+                        color: '#1C252E', // Focused label color
+                    },
+                    '&.Mui-error': {
+                        color: 'red', // Label color when there's an error
+                    },
+                },
+            },
+        },
+    },
+});
 
 interface InputFiled {
     email: string;
@@ -94,7 +137,7 @@ const SignIn: React.FC = () => {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <Box
                     sx={{
@@ -108,7 +151,7 @@ const SignIn: React.FC = () => {
                         backgroundColor: '#fff', // Optional: Ensure background color is set
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: '#1C252E' }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -136,6 +179,19 @@ const SignIn: React.FC = () => {
                                     error={!!errors.email}
                                     helperText={errors.email?.message}
                                     onChange={(e) => handleOnChange("email", e.target.value)}
+                                    sx={{
+                                        '& .MuiFilledInput-root': {
+                                            '&:before': {
+                                                borderBottomColor: '#1C252E', // Default underline color
+                                            },
+                                            '&:hover:not(.Mui-disabled):before': {
+                                                borderBottomColor: '#1C252E', // Hover underline color
+                                            },
+                                            '&:after': {
+                                                borderBottomColor: '#1C252E', // Focused underline color
+                                            },
+                                        },
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -177,6 +233,17 @@ const SignIn: React.FC = () => {
                                                 </IconButton>
                                             </InputAdornment>
                                         }
+                                        sx={{
+                                            '&:before': {
+                                                borderBottomColor: '#1C252E', // Default underline color
+                                            },
+                                            '&:hover:not(.Mui-disabled):before': {
+                                                borderBottomColor: '#1C252E', // Hover underline color
+                                            },
+                                            '&:after': {
+                                                borderBottomColor: '#1C252E', // Focused underline color
+                                            },
+                                        }}
                                     />
                                     {errors.password && (
                                         <FormHelperText>{errors.password.message}</FormHelperText>
@@ -194,7 +261,7 @@ const SignIn: React.FC = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, fontSize: "16px",fontWeight:"600" }}
                         >
                             Sign In
                         </Button>
