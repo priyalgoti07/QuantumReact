@@ -1,12 +1,18 @@
 import { Outlet } from 'react-router-dom'
-import Header from './components/Header'
+import LeftNavbar from './components/LeftNavbar'
+import { Box } from '@mui/material'
 
 const Layout = () => {
   return (
-    <div>
-      <Header/>
+    <Box sx={{ display: 'flex' }}>
+    <LeftNavbar />
+    <Box
+      component="main"
+      sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+    >
       <Outlet />
-    </div>
+    </Box>
+  </Box>
   )
 }
 
