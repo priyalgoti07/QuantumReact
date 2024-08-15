@@ -1,90 +1,90 @@
 import React, { useState } from 'react';
-import { Drawer, List, ListItem, ListItemText, Toolbar, AppBar, Typography, Box, ListItemIcon } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Toolbar, AppBar, Typography, Box, ListItemIcon, Collapse } from '@mui/material';
 import { Link } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
+import MenuIcon from '@mui/icons-material/Menu';
+// import IconButton from '@mui/icons-material/Icon';
 
 const drawerWidth = 200;
 
 const LeftNavbar: React.FC = () => {
 
     const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
+
+    // Function to handle click on the User list item
+    const handleUserMenuClick = () => {
+        setUserMenuOpen(!userMenuOpen);
+    };
     return (
-        <div style={{ display: 'flex' }}>
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <Typography variant="h6" noWrap>
-                        My Application
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+        <div>
             <Drawer
-                variant="permanent"
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
                 }}
+                variant="permanent"
+                anchor="left"
             >
-                <Toolbar />
+                <div style={{ padding: '20px' }}>
+                    <Typography variant="h6" noWrap>
+                        My App
+                    </Typography>
+                </div>
                 <List>
-                    <ListItem component={Link} to="/home">
+                    <ListItem component={Link} to="/home" button>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
                         <ListItemText primary="Home" />
                     </ListItem>
-                    {/* User ListItem with hover submenu */}
-                    <ListItem
-                        onMouseEnter={() => setUserMenuOpen(true)}
-                        onMouseLeave={() => setUserMenuOpen(false)}
-                        sx={{ position: 'relative' }}
-                    >
+
+                    {/* User ListItem with Submenu */}
+                    <ListItem button onClick={handleUserMenuClick}>
                         <ListItemIcon>
-                            {/* <PeopleIcon /> */}
+                            <PeopleIcon />
                         </ListItemIcon>
                         <ListItemText primary="User" />
+                        {userMenuOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
 
                     {/* Submenu for User */}
-                    {userMenuOpen && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                bottom: '100%',  // Position the submenu above the parent item
-                                left: 0,
-                                width: '100%',  // Match the width of the parent item
-                                bgcolor: 'background.paper',
-                                borderRadius: 1,
-                                boxShadow: 3,
-                                zIndex: 1,
-                            }}
-                        // onMouseEnter={handleMouseEnter}
-                        // onMouseLeave={handleMouseLeave}
-                        >
-                            <List component="div" disablePadding>
-                                <ListItem
-                                    component={Link}
-                                    to="/user/profile"
-                                    button
-                                    sx={{ pl: 2 }}
-                                >
-                                    <ListItemIcon>
-                                        {/* <PersonIcon /> */}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Profile" />
-                                </ListItem>
-                                <ListItem
-                                    component={Link}
-                                    to="/user/group"
-                                    button
-                                    sx={{ pl: 2 }}
-                                >
-                                    <ListItemIcon>
-                                        {/* <GroupIcon /> */}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Group" />
-                                </ListItem>
-                            </List>
-                        </Box>
-                    )}
-                    <ListItem component={Link} to="/">
-                        <ListItemText primary="About" />
+                    <Collapse in={userMenuOpen} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItem
+                                component={Link}
+                                to="/user/profile"
+                                button
+                                sx={{ pl: 4 }}
+                            >
+                                <ListItemIcon>
+                                    <PersonIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Profile" />
+                            </ListItem>
+                            <ListItem component={Link} to="/user/create" button sx={{ pl: 4 }}>
+                                <ListItemIcon>
+                                    <GroupIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Create" />
+                            </ListItem>
+                        </List>
+                    </Collapse>
+
+                    <ListItem component={Link} to="/contact" button>
+                        <ListItemIcon>
+                            <ContactMailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Contact" />
                     </ListItem>
                 </List>
             </Drawer>
