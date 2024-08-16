@@ -1,8 +1,9 @@
-import { Alert, Box, Button, Container, CssBaseline, Grid, InputAdornment, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material'
+import { Alert, Box, Button, Container, CssBaseline, FormControl, FormHelperText, Grid, InputAdornment, InputLabel, MenuItem, Select, Snackbar, TextField, ThemeProvider, Typography, createTheme } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import CountrySelect from './CountrySelect';
 const defaultTheme = createTheme();
 
 interface InputFiled {
@@ -18,7 +19,6 @@ const Create: React.FC = () => {
   const navigate = useNavigate(); // Initialize useNavigate for redirection
   const dispatch = useAppDispatch()
   const users = useAppSelector((state) => state.user)
-  console.log("usersusersusersusers------->", users)
   const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState<string>('');
   const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
@@ -31,6 +31,7 @@ const Create: React.FC = () => {
     setValue,
     clearErrors,
     reset,
+    watch,
   } = useForm<InputFiled>()
 
   //Function to onSubmit value Store
@@ -52,6 +53,8 @@ const Create: React.FC = () => {
 
   // Function to handle onChange and clear error if valid
   const handleOnChange = async (field: keyof InputFiled, value: string) => {
+    console.log("value-------->", value, field);
+
     setValue(field, value); // Update the value in the form state
     const result = await trigger(field); // Trigger validation for the specific field
     if (result) {
@@ -137,6 +140,16 @@ const Create: React.FC = () => {
                   onChange={(e) => handleOnChange("phoneNumber", e.target.value)}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <CountrySelect
+                  value={watch("country")} // useForm's watch to track the country field
+                  {...register("country", { required: "Country is required" })}
+                  onChange={(e) => handleOnChange("country", e.target.value as string)}
+                />
+                {errors.country && (
+                  <FormHelperText error>{errors.country.message}</FormHelperText>
+                )}
+              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -144,7 +157,7 @@ const Create: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Create
             </Button>
 
           </Box>

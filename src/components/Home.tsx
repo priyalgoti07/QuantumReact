@@ -1,34 +1,84 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import { getAccessToken } from "../utils/getAccessToken";
+
+interface Country {
+  country_name: string;
+}
 
 const Home: React.FC = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const headers = new Headers();
-        headers.append("X-CSCAPI-KEY", "API_KEY");
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-        const requestOptions: RequestInit = {
-          method: 'GET',
-          headers: headers,
-          redirect: 'follow',
-        };
+  // Function to get the access token
+  const getAccessToken = async (): Promise<string | null> => {
+    try {
+      const response = await fetch("https://www.universal-tutorial.com/api/getaccesstoken", {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "api-token": "NvmhGRFXoprN1Q4TAaludqtkRtEZrQQBr5MBY0x3dHp7kFLfUZJ7ebT7taKrGtlNGeg",
+          "user-email": "yagnik.infineit2003@gmail.com",
+        },
+      });
 
-        const response = await fetch("https://api.countrystatecity.in/v1/countries", requestOptions);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const result = await response.json(); // Assuming the response is in JSON format
-        console.log(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      if (response.ok) {
+        const data = await response.json();
+        return data.auth_token;
+      } else {
+        console.error("Failed to fetch access token");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    return null;
+  };
 
-    fetchData();
+  // Function to get the list of countries
+  const fetchCountries = async () => {
+    const authToken = await getAccessToken();
+    if (authToken) {
+      try {
+        const response = await fetch("https://www.universal-tutorial.com/api/countries/", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${authToken}`,
+            "Accept": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCountries(data);
+        } else {
+          console.error("Failed to fetch countries");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <h1>Welcome to the Home Page</h1>
+    <div>
+      <h1>Country List</h1>
+      <ul>
+        {countries.map((country) => (
+          <li key={country.country_name}>{country.country_name}</li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
