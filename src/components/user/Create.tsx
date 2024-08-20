@@ -4,14 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import CountrySelect from './CountrySelect';
+import StateSelect from './StateSelect';
+import CitySelect from './CitySelect';
+import { addSubUser } from '../../userData/subUserSlice';
 const defaultTheme = createTheme();
 
-interface InputFiled {
+export interface InputFiled {
+  id: string;
   fullName: string;
   emailAdress: string;
-  phoneNumber: number;
-  country: string
-  // password: string;
+  phoneNumber: string;
+  country: string;
+  state: string;
+  city: string;
+  zipCode: string;
+  company: string;
 }
 
 const Create: React.FC = () => {
@@ -32,15 +39,26 @@ const Create: React.FC = () => {
     clearErrors,
     reset,
     watch,
-  } = useForm<InputFiled>()
+  } = useForm<InputFiled>({
+    defaultValues: {
+      fullName: '',
+      emailAdress: '',
+      phoneNumber: '',
+      country: '',
+      state: '',
+      city: '',
+      zipCode: '',
+      company: '',
+    }
+  })
 
   //Function to onSubmit value Store
   const onformsubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
     console.log("data", data);
 
     event?.preventDefault();
-    // dispatch(setUser(data))
-    setSnackbarMessage("sign-up successfull")
+    dispatch(addSubUser(data))
+    setSnackbarMessage("create  successfull User")
     setSnackbarSeverity("success")
     setOpenSnackbar(true)
     reset()
@@ -61,6 +79,7 @@ const Create: React.FC = () => {
       clearErrors(field); // Clear the error if the validation passes
     }
   };
+
   return (
 
     <ThemeProvider theme={defaultTheme}>
@@ -140,15 +159,90 @@ const Create: React.FC = () => {
                   onChange={(e) => handleOnChange("phoneNumber", e.target.value)}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <CountrySelect
                   value={watch("country")} // useForm's watch to track the country field
-                  {...register("country", { required: "Country is required" })}
-                  onChange={(e) => handleOnChange("country", e.target.value as string)}
+                  onChange={(event, newValue) => {
+                    setValue("country", newValue || ""); // Update the form value
+                    trigger("country"); // Trigger validation
+                  }}
+                  error={!!errors.country} // Pass error state to CountrySelect
+                  helperText={errors.country?.message} // Pass the error message
                 />
-                {errors.country && (
-                  <FormHelperText error>{errors.country.message}</FormHelperText>
-                )}
+                <input
+                  type="hidden"
+                  {...register("country", { required: "Country is required" })}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <StateSelect
+                  country={watch("country")} // Pass the selected country
+                  value={watch("state")}
+                  onChange={async (event, newValue) => {
+                    setValue("state", newValue || "");
+                    await trigger("state");
+                  }}
+                  error={!!errors.state}
+                  helperText={errors.state?.message}
+                />
+                <input
+                  type="hidden"
+                  {...register("state", { required: "State is required" })}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <CitySelect
+                  state={watch("state")} // useForm's watch to track the state field
+                  value={watch("city")} // useForm's watch to track the city field
+                  onChange={(event, newValue) => {
+                    setValue("city", newValue || ""); // Update the form value
+                    trigger("city"); // Trigger validation
+                  }}
+                  error={!!errors.city}
+                  helperText={errors.city?.message}
+                />
+
+                <input
+                  type="hidden"
+                  {...register("city", { required: "City is required" })}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="zipCode"
+                  label="Zip Code"
+                  autoComplete="zipCode"
+                  variant='filled'
+                  {...register("zipCode",
+                    { required: "Zip Code  is required" }
+                  )}
+                  error={!!errors.zipCode}
+                  helperText={errors.zipCode?.message}
+                  onChange={(e) => handleOnChange("zipCode", e.target.value)}
+                />
+
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="company"
+                  label="Company"
+                  autoComplete="company"
+                  variant='filled'
+                  {...register("company",
+                    { required: "Company is required" }
+                  )}
+                  error={!!errors.company}
+                  helperText={errors.company?.message}
+                  onChange={(e) => handleOnChange("company", e.target.value)}
+                />
+
               </Grid>
             </Grid>
             <Button
@@ -173,7 +267,7 @@ const Create: React.FC = () => {
 
         </Snackbar>
       </Container>
-    </ThemeProvider>
+    </ThemeProvider >
   )
 }
 

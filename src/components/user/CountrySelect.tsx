@@ -9,9 +9,11 @@ interface Country {
 interface CountrySelectProps {
   value: string | null;
   onChange: (event: any, newValue: string | null) => void;
+  error?: boolean;  // Error state passed from the parent component
+  helperText?: string; // Error message to display
 }
 
-const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange }) => {
+const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange, error, helperText }) => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -48,16 +50,24 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange }) => {
   }, []);
 
   return (
-    <Autocomplete
-      freeSolo
-      value={value}
-      onChange={onChange}
-      options={countries.map((country) => country.country_name)}
-      renderInput={(params) => (
-        <TextField {...params} label="Country" variant="filled" />
-      )}
-      loading={loading}
-    />
+    <>
+      <Autocomplete
+        freeSolo
+        value={value || ""} // Ensure the value is always controlled
+        onChange={onChange}
+        options={countries.map((country) => country.country_name)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Country"
+            variant="filled"
+            error={error} // Apply error state
+            helperText={helperText} // Show error message
+          />
+        )}
+        loading={loading}
+      />
+    </>
   );
 };
 

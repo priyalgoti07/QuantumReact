@@ -8,7 +8,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
-import MenuIcon from '@mui/icons-material/Menu';
+import ListIcon from '@mui/icons-material/List';
 // import IconButton from '@mui/icons-material/Icon';
 
 const drawerWidth = 200;
@@ -76,6 +76,12 @@ const LeftNavbar: React.FC = () => {
                                     <GroupIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Create" />
+                            </ListItem>
+                            <ListItem component={Link} to="/user/list" button sx={{ pl: 4 }}>
+                                <ListItemIcon>
+                                    <ListIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="List" />
                             </ListItem>
                         </List>
                     </Collapse>

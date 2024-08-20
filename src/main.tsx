@@ -12,12 +12,14 @@ import { PersistGate } from 'redux-persist/integration/react'
 import ForgetPassword from './components/ForgetPassword.tsx'
 import Profile from './components/user/Profile.tsx'
 import Create from './components/user/Create.tsx'
+import ListUser from './components/user/ListUser.tsx'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Layout />} >
     <Route path='/home' element={<Home />} />
     <Route path='/user/profile' element={<Profile />} />
     <Route path='/user/create' element={<Create />} />
+    <Route path='/user/list' element={<ListUser />} />
     <Route path='/dashboard' element={<Dashboard />} />
     <Route path='/signin' element={<SignIn />} />
     <Route path='/signup' element={<SignUp />} />
