@@ -86,7 +86,7 @@ const LeftNavbar: React.FC = () => {
                         </List>
                     </Collapse>
 
-                    <ListItem component={Link} to="/contact" button>
+                    <ListItem component={Link} to="/user/signin" button>
                         <ListItemIcon>
                             <ContactMailIcon />
                         </ListItemIcon>

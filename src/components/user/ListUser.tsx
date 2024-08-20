@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
-import { useTable, Column } from 'react-table';
+import { useTable, Column, CellProps } from 'react-table';
 import { useNavigate } from 'react-router-dom';
 import { deleteSubuser } from '../../userData/subUserSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface SubUser {
   fullName: string;
@@ -37,31 +41,80 @@ const ListUser: React.FC = () => {
       { Header: 'Full Name', accessor: 'fullName' },
       { Header: 'Email', accessor: 'emailAdress' },
       { Header: 'Phone Number', accessor: 'phoneNumber' },
-      { Header: 'Company', accessor: 'company' },
+      { Header: 'Country', accessor: 'country' },
+      { Header: 'State', accessor: 'state' },
+      { Header: 'City', accessor: 'city' },
+
       {
-        Header: 'Actions',
+        Header: '',
+        id: 'edit',
         Cell: ({ row }) => (
           <div className="flex space-x-2">
             <button
               onClick={() => handleEdit(row.original.id)}
-              className="text-blue-600 hover:underline"
+              className="text-black-600 hover:underline"
             >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDelete(row.original.id)}
-              className="text-red-600 hover:underline"
-            >
-              Delete
+              <EditIcon />
             </button>
           </div>
         ),
       },
+      {
+        Header: '',
+        id: 'action',
+        Cell: ({ row }) => {
+          const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+          const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+            setAnchorEl(event.currentTarget);
+          };
+
+          const handleClose = () => {
+            setAnchorEl(null);
+          };
+
+          return (
+            <div className="flex space-x-2">
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+
+                <MenuItem onClick={() => { handleEdit(row.original.id); handleClose(); }}>
+                  <button
+                    onClick={() => handleEdit(row.original.id)}
+                    className="text-black-600 hover:underline"
+                  >
+                    <EditIcon fontSize="small" /> Edit
+                  </button>
+                </MenuItem>
+                <MenuItem onClick={() => { handleDelete(row.original.id); handleClose(); }}>
+                  <button
+                    onClick={() => handleDelete(row.original.id)}
+                    className="text-[#FF5F3C] hover:underline"
+                  >
+                    <DeleteIcon fontSize="small" />  Delete</button>
+                </MenuItem>
+              </Menu>
+            </div>
+          );
+        },
+      },
+
     ],
     []
   );
 
-  // Table instance with data and columns
   // Table instance with data and columns
   const {
     getTableProps,
@@ -72,7 +125,7 @@ const ListUser: React.FC = () => {
   } = useTable<SubUser>({ columns, data: subUserList });
 
   return (
-    <div className="p-4">
+    <div className="px-40 py-2">
       <h2 className="text-2xl font-bold mb-4">List of Subusers</h2>
       <table {...getTableProps()} className="min-w-full bg-white border border-gray-200">
         <thead className="bg-[#F4F6F8] text-[#637381]">

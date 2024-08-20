@@ -19,6 +19,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Alert, FilledInput, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Snackbar } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 import EyeClose from '../assets/svg/customSvg/EyeClose';
+import CryptoJS from 'crypto-js';
+import { encryptData } from '../utils/helper';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
@@ -80,6 +82,11 @@ const SignIn: React.FC = () => {
     const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
 
 
+    // Function to generate a random token
+    const generateRandomToken = (): string => {
+        return btoa(Math.random().toString(36).substring(2) + new Date().getTime().toString(36));
+    };
+
     const { register,
         handleSubmit,
         formState: { errors },
@@ -100,6 +107,10 @@ const SignIn: React.FC = () => {
                 setOpenSnackbar(true)
             }
             else {
+                const localStore = encryptData(registeredUser.email)
+                localStorage.setItem("token", localStore || '')
+                const token = generateRandomToken();
+                localStorage.setItem('authToken', token);
                 setSnackbarMessage("Login successfull")
                 setSnackbarSeverity("success")
                 setOpenSnackbar(true)
@@ -261,7 +272,7 @@ const SignIn: React.FC = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2, fontSize: "16px",fontWeight:"600" }}
+                            sx={{ mt: 3, mb: 2, fontSize: "16px", fontWeight: "600" }}
                         >
                             Sign In
                         </Button>
