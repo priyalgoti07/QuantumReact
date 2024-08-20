@@ -54,14 +54,13 @@ const Create: React.FC = () => {
 
   //Function to onSubmit value Store
   const onformsubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
-    console.log("data", data);
-
     event?.preventDefault();
     dispatch(addSubUser(data))
     setSnackbarMessage("create  successfull User")
     setSnackbarSeverity("success")
     setOpenSnackbar(true)
     reset()
+    navigate('/user/list');
   }
 
   //Close Error Message

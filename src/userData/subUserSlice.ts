@@ -32,14 +32,23 @@ export const userSlice = createSlice({
             state.subusers.push(newSubUser)
             // localStorage.setItem("users", JSON.stringify(state.users))
         },
-        // updatePassword: (state, action: PayloadAction<User>) => {
-        //     const user = state.subusers.find(user => user.email === action.payload.email);
-        //     if (user) {
-        //         user.password = action.payload.newpassword
-        //     }
-        // }
+        updateSubUser: (state, action: PayloadAction<InputFiled>) => {
+            let index = state.subusers.findIndex((record) => record.id === action.payload.id)
+            if (index !== -1) {
+                // If the subuser exists, update it with the new data
+                state.subusers[index] = action.payload;
+            } else {
+                console.log("User not found with ID:", action.payload.id);
+            }
+            console.log("Updated state:", current(state));
+
+
+        },
+        deleteSubuser: (state, action: PayloadAction<string>) => {
+            state.subusers = state.subusers.filter((record) => record.id !== action.payload)
+        }
     }
 })
 
-export const { addSubUser, } = userSlice.actions
+export const { addSubUser, updateSubUser, deleteSubuser } = userSlice.actions
 export default userSlice.reducer

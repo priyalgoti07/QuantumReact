@@ -13,6 +13,7 @@ import ForgetPassword from './components/ForgetPassword.tsx'
 import Profile from './components/user/Profile.tsx'
 import Create from './components/user/Create.tsx'
 import ListUser from './components/user/ListUser.tsx'
+import EditUser from './components/user/EditUser.tsx'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Layout />} >
@@ -20,6 +21,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/user/profile' element={<Profile />} />
     <Route path='/user/create' element={<Create />} />
     <Route path='/user/list' element={<ListUser />} />
+    <Route path='/user/edit/:id' element={<EditUser />} />
     <Route path='/dashboard' element={<Dashboard />} />
     <Route path='/signin' element={<SignIn />} />
     <Route path='/signup' element={<SignUp />} />

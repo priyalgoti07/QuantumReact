@@ -1,6 +1,8 @@
 import React from 'react';
-import { useAppSelector } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 import { useTable, Column } from 'react-table';
+import { useNavigate } from 'react-router-dom';
+import { deleteSubuser } from '../../userData/subUserSlice';
 
 interface SubUser {
   fullName: string;
@@ -15,8 +17,19 @@ interface SubUser {
 }
 
 const ListUser: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   // Get subuser data from Redux store
   const subUserList = useAppSelector((state) => state.subuser.subusers);
+
+  const handleEdit = (id: string) => {
+    navigate(`/user/edit/${id}`);
+  };
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteSubuser(id)); // Pass only the id
+  };
 
   // Define columns for the table
   const columns: Column<SubUser>[] = React.useMemo(
@@ -25,10 +38,30 @@ const ListUser: React.FC = () => {
       { Header: 'Email', accessor: 'emailAdress' },
       { Header: 'Phone Number', accessor: 'phoneNumber' },
       { Header: 'Company', accessor: 'company' },
+      {
+        Header: 'Actions',
+        Cell: ({ row }) => (
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleEdit(row.original.id)}
+              className="text-blue-600 hover:underline"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(row.original.id)}
+              className="text-red-600 hover:underline"
+            >
+              Delete
+            </button>
+          </div>
+        ),
+      },
     ],
     []
   );
 
+  // Table instance with data and columns
   // Table instance with data and columns
   const {
     getTableProps,
@@ -36,7 +69,7 @@ const ListUser: React.FC = () => {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data: subUserList });
+  } = useTable<SubUser>({ columns, data: subUserList });
 
   return (
     <div className="p-4">
