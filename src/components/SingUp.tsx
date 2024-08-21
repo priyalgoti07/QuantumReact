@@ -35,7 +35,6 @@ const SignUp: React.FC = () => {
     const navigate = useNavigate(); // Initialize useNavigate for redirection
     const dispatch = useAppDispatch()
     const users = useAppSelector((state) => state.user)
-    console.log("usersusersusersusers------->", users)
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState<string>('');
     const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');

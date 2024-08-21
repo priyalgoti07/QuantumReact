@@ -21,6 +21,8 @@ import { Visibility } from '@mui/icons-material';
 import EyeClose from '../assets/svg/customSvg/EyeClose';
 import CryptoJS from 'crypto-js';
 import { encryptData } from '../utils/helper';
+import { useAppDispatch } from '../utils/hooks';
+import { userToken } from '../userData/userSlice';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
@@ -75,6 +77,7 @@ interface InputFiled {
 
 const SignIn: React.FC = () => {
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const UserAllData = useSelector((state: RootState) => state.user)
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = React.useState<string>('');
@@ -109,6 +112,7 @@ const SignIn: React.FC = () => {
             else {
                 const localStore = encryptData(registeredUser.email)
                 localStorage.setItem("token", localStore || '')
+                // dispatch(userToken(localStore))
                 const token = generateRandomToken();
                 localStorage.setItem('authToken', token);
                 setSnackbarMessage("Login successfull")

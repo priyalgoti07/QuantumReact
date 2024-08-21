@@ -12,11 +12,13 @@ interface User {
 // Define a type for the slice state
 export interface UserState {
     users: User[];  // Change to an object if you're managing a single user, or use an array for multiple users
+    token: string | null; // Add this line to store the token
 }
 
 // Define the initial state
 const initialState: UserState = {
-    users: []  // Start with no user logged in
+    users: [], // Start with no user logged in
+    token: null, // Initialize the token as null
 }
 export const userSlice = createSlice({
     name: "user",
@@ -35,9 +37,12 @@ export const userSlice = createSlice({
             if (user) {
                 user.password = action.payload.newpassword
             }
+        },
+        userToken: (state, action) => {
+            state.token = action.payload;
         }
     }
 })
 
-export const { setUser, updatePassword } = userSlice.actions
+export const { setUser, updatePassword, userToken } = userSlice.actions
 export default userSlice.reducer

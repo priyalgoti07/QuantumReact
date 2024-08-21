@@ -3,7 +3,6 @@ import { useAppSelector } from '../utils/hooks'
 
 const Dashboard = () => {
   const userList = useAppSelector((state) => state.user)
-  console.log("UserList", userList);
 
   return (
     <div>

@@ -40,8 +40,6 @@ export const userSlice = createSlice({
             } else {
                 console.log("User not found with ID:", action.payload.id);
             }
-            console.log("Updated state:", current(state));
-
 
         },
         deleteSubuser: (state, action: PayloadAction<string>) => {

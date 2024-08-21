@@ -53,7 +53,6 @@ const ForgetPassword: React.FC = () => {
     const onLoginSubmit: SubmitHandler<InputFiled> = (data, event?: React.BaseSyntheticEvent) => {
         event?.preventDefault();
         const registeredUser = UserAllData.users.find((item) => item.email === data.email)
-        console.log("registeredUser----->", registeredUser);
 
         if (registeredUser) {
             generateOTP()
@@ -77,7 +76,6 @@ const ForgetPassword: React.FC = () => {
         setGeneratedOtp(otp)
         alert(`Your OTP is: ${otp}`)
         setStep('reset')
-        console.log("otp", otp);
 
     }
     // Function to handle onChange and clear error if valid
@@ -90,16 +88,13 @@ const ForgetPassword: React.FC = () => {
         }
     };
     const handleResetPassword: SubmitHandler<InputFiled> = (data: InputFiled, event?: React.BaseSyntheticEvent) => {
-        console.log("data", data);
 
         event?.preventDefault()
         if (otp === generatedOtp) {
             const registeredUser = UserAllData.users.find((item) => item.email === data.email)
-            console.log("registeredUser----->", registeredUser);
 
             if (registeredUser) {
                 dispatch(updatePassword({ email: data.email, newpassword: data.newpassword }))
-                console.log("i am dispatch password");
                 setSnackbarMessage("Passwor is succssfull update.")
                 setSnackbarSeverity('success')
                 setOpenSnackbar(true)
@@ -114,12 +109,10 @@ const ForgetPassword: React.FC = () => {
                 setOpenSnackbar(true)
 
             }
-            console.log("Password Change");
         } else {
             alert("Invalid OTP. Please try again.");
         }
     }
-    console.log("generatedOtp", generatedOtp);
 
     return (
         <ThemeProvider theme={defaultTheme}>

@@ -47,9 +47,6 @@ const Edit: React.FC = () => {
   }, [subUser, setValue]);
 
   const updateRecord: SubmitHandler<InputFiled> = (data) => {
-
-    console.log("data------->", data, subUser, id);
-
     dispatch(updateSubUser({ ...data, id: id as string }));
     navigate('/user/list'); // Redirect to the list page
   };

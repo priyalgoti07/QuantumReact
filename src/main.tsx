@@ -15,24 +15,35 @@ import Create from './components/user/Create.tsx'
 import ListUser from './components/user/ListUser.tsx'
 import EditUser from './components/user/EditUser.tsx'
 import { decryptData } from './utils/helper.ts'
-const getToken = decryptData(localStorage.getItem("token") || '')
-console.log("getToken", getToken);
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.tsx'
 
+const routes = [
+  // Public Routes
+  { path: '/dashboard', element: <Dashboard /> },
+  { path: '/signin', element: <SignIn /> },
+  { path: '/signup', element: <SignUp /> },
+  { path: '/forgetpassword', element: <ForgetPassword /> },
+
+  // Protected Routes
+  { path: '/home', element: <Home />, protected: true },
+  { path: '/user/profile', element: <Profile />, protected: true },
+  { path: '/user/create', element: <Create />, protected: true },
+  { path: '/user/signin', element: <SignIn /> },
+  { path: '/user/list', element: <ListUser />, protected: true },
+  { path: '/user/edit/:id', element: <EditUser />, protected: true }
+];
 
 const router = createBrowserRouter(createRoutesFromElements(
-  <Route path='/' element={<Layout />} >
-    <Route path='/home' element={<Home />} />
-    <Route path='/user/profile' element={<Profile />} />
-    {/* <Route path='/user/create' element={<Create />} /> */}
-    <Route path='/user/signin' element={<SignIn />} />
-    <Route path='/user/list' element={<ListUser />} />
-    <Route path='/user/edit/:id' element={<EditUser />} />
-    <Route path='/dashboard' element={<Dashboard />} />
-    <Route path='/signin' element={<SignIn />} />
-    <Route path='/signup' element={<SignUp />} />
-    <Route path='/forgetpassword' element={<ForgetPassword />} />
+  <Route path='/' element={<Layout />}>
+    {routes.map(({ path, element, protected: isProtected }) => (
+      <Route
+        key={path}
+        path={path}
+        element={isProtected ? <ProtectedRoute>{element}</ProtectedRoute> : element}
+      />
+    ))}
   </Route>
-))
+));
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>

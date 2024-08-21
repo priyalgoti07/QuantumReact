@@ -1,10 +1,16 @@
-import { Outlet } from 'react-router-dom'
-import LeftNavbar from './components/LeftNavbar'
-import { AppBar, Box, Toolbar, Typography } from '@mui/material'
 import React from 'react';
+import LeftNavbar from './components/LeftNavbar'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 
 const Layout: React.FC = () => {
+  const navigate = useNavigate();
   const drawerWidth = 200;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/signin');
+  }
   return (
     <Box sx={{ display: 'flex' }}>
       <LeftNavbar />
@@ -17,10 +23,12 @@ const Layout: React.FC = () => {
           marginLeft: drawerWidth,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" noWrap>
             My Application
           </Typography>
+          {/* Right Side Button */}
+          <Button color="inherit" onClick={handleLogout}>SignOut</Button>
         </Toolbar>
       </AppBar>
 

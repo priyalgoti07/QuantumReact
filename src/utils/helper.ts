@@ -7,8 +7,6 @@ export const encryptData = (data: string | undefined) => {
 }
 
 export const decryptData = (data: string | undefined) => {
-    console.log("data", data);
-
     if (data && data !== '') {
         const bytes = CryptoJS.AES.decrypt(data, import.meta.env.secretKey || '');
         const decryptedString = bytes.toString(CryptoJS.enc.Utf8);

@@ -70,7 +70,6 @@ const Create: React.FC = () => {
 
   // Function to handle onChange and clear error if valid
   const handleOnChange = async (field: keyof InputFiled, value: string) => {
-    console.log("value-------->", value, field);
 
     setValue(field, value); // Update the value in the form state
     const result = await trigger(field); // Trigger validation for the specific field
