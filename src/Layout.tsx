@@ -28,7 +28,10 @@ const Layout: React.FC = () => {
             My Application
           </Typography>
           {/* Right Side Button */}
-          <Button color="inherit" onClick={handleLogout}>SignOut</Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button color="inherit" onClick={handleLogout} >SignIn</Button>
+            <Button color="inherit" onClick={handleLogout}>SignOut</Button>
+          </Box>
         </Toolbar>
       </AppBar>
 

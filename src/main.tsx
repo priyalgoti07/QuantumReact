@@ -40,7 +40,7 @@ const routes = [
 const router = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/" element={<Layout />}>
-      {routes.filter(route => route.path !== '*').map(({ path, element, protected: isProtected }) => (
+      {routes.filter(route => (route.path !== '*' && route.path !== '/signin' && route.path !== '/signup' && route.path !== '/forgetpassword')).map(({ path, element, protected: isProtected }) => (
         <Route
           key={path}
           path={path}
@@ -50,13 +50,16 @@ const router = createBrowserRouter(createRoutesFromElements(
     </Route>
 
     <Route path="*" element={<NotFound />} /> {/* 404 Route outside Layout */}
+    <Route path="/signin" element={<SignIn />} />
+    <Route path="/signup" element={<SignUp />} />
+    <Route path="/forgetpassword" element={<ForgetPassword />} />
   </>
 
 ));
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </PersistGate>
   </Provider>,
 )
