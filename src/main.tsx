@@ -17,6 +17,7 @@ import EditUser from './components/user/EditUser.tsx'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.tsx'
 import NotFound from './components/NotFound.tsx'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
+import InfiniteScroll from './components/InfiniteScroll/InfiniteScroll.tsx'
 
 const routes = [
   // Public Routes
@@ -32,6 +33,7 @@ const routes = [
   { path: '/user/signin', element: <SignIn /> },
   { path: '/user/list', element: <ListUser />, protected: true },
   { path: '/user/edit/:id', element: <EditUser />, protected: true },
+  { path: '/user/infinite-scroll', element: <InfiniteScroll />, protected: true },
 
   // Catch-all route for 404 Not Found
   { path: '*', element: <NotFound /> }

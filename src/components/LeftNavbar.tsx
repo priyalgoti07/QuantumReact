@@ -85,8 +85,14 @@ const LeftNavbar: React.FC = () => {
                             </ListItem>
                         </List>
                     </Collapse>
+                    <ListItem component={Link} to="/user/infinite-scroll" button>
+                        <ListItemIcon>
+                            <ContactMailIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="InfiniteScroll" />
+                    </ListItem>
 
-                    <ListItem component={Link} to="/user/signin" button>
+                    <ListItem component={Link} to="/user/contact" button>
                         <ListItemIcon>
                             <ContactMailIcon />
                         </ListItemIcon>
