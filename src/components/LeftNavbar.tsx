@@ -9,6 +9,8 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import ListIcon from '@mui/icons-material/List';
+import Scroll from '../assets/svg/scroll.svg'
+import ChatIcon from '@mui/icons-material/Chat';
 // import IconButton from '@mui/icons-material/Icon';
 
 const drawerWidth = 200;
@@ -85,9 +87,11 @@ const LeftNavbar: React.FC = () => {
                             </ListItem>
                         </List>
                     </Collapse>
-                    <ListItem component={Link} to="/user/infinite-scroll" button>
+                    <ListItem component={Link} to="/infinite-scroll" button>
                         <ListItemIcon>
-                            <ContactMailIcon />
+                            <div>
+                                <img src={Scroll} alt='scroll' />
+                            </div>
                         </ListItemIcon>
                         <ListItemText primary="InfiniteScroll" />
                     </ListItem>
@@ -97,6 +101,13 @@ const LeftNavbar: React.FC = () => {
                             <ContactMailIcon />
                         </ListItemIcon>
                         <ListItemText primary="Contact" />
+                    </ListItem>
+
+                    <ListItem component={Link} to="/user-chat" button>
+                        <ListItemIcon>
+                            <ChatIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="UserChat" />
                     </ListItem>
                 </List>
             </Drawer>
