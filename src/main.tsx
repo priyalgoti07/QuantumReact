@@ -29,7 +29,7 @@ const routes = [
 
   // Protected Routes
   { path: '/home', element: <Home />, protected: true },
-  { path: '/user/profile', element: <ErrorBoundary><Profile /></ErrorBoundary>, protected: true },
+  { path: '/user/profile', element: <Profile />, protected: true },
   { path: '/user/create', element: <Create />, protected: true },
   { path: '/user/signin', element: <SignIn /> },
   { path: '/user/list', element: <ListUser />, protected: true },

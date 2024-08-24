@@ -2,6 +2,7 @@ import React from 'react';
 import LeftNavbar from './components/LeftNavbar'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
@@ -45,7 +46,8 @@ const Layout: React.FC = () => {
 
         }}
       >
-        <Outlet />
+        <ErrorBoundary><Outlet /></ErrorBoundary>
+
       </Box>
     </Box>
   )
